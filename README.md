@@ -43,7 +43,7 @@ This presentation illustrates the application of LiaScript Makros for visualizin
 
 The use case demonstrates the combination of an "arbitrary" programming language for implementing model behavior and controller as well as JavaScript for visualization purposes.
 
-The source code is available on  the interactive mode can be reached by 
+The source code is available on [GitHub](https://github.com/SebastianZug/ChemistryExample), the interactive mode can be reached by this [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/ChemistryExample/master/README.md#1).
 
 ## Concepts
 
