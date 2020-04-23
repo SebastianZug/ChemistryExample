@@ -32,6 +32,9 @@ link: https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css
     }
     @input(1);
     Plotly.newPlot(span_id, traces, layout);
+    if (@0 == 1){
+      setTimeout(function() { console.clear() }, 1);
+    }
     console.log("Aus Maus");
 ```)
 @end
@@ -39,11 +42,19 @@ link: https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css
 
 # Example for Macro usage in LiaScript
 
-This presentation illustrates the application of LiaScript Makros for visualizing basic system models. It implements an PID control solution for a PT1 setting.
+This presentation illustrates the application of [LiaScript](https://liascript.github.io/)-Makros for visualizing basic system models. It implements an PID control solution for a PT1 setting.
 
-The use case demonstrates the combination of an "arbitrary" programming language for implementing model behavior and controller as well as JavaScript for visualization purposes.
+The document demonstrates the combination of
 
-The source code is available on [GitHub](https://github.com/SebastianZug/ChemistryExample), the interactive mode can be reached by this [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/ChemistryExample/master/README.md#1).
++ an "arbitrary" programming language for implementing model behavior and controller (Python) as well as
++ JavaScript for visualization purposes.
+
+The user is able to adapt the magic constants of the system model and
+the controller directly but do not have to pay attention to the visualization code.
+The results can be exported as csv file or in an image.
+
+| Source code: | [Link](https://github.com/SebastianZug/ChemistryExample) |
+| Interactive mode: | [Link](https://liascript.github.io/course/?https://raw.githubusercontent.com/SebastianZug/ChemistryExample/master/README.md#1) |
 
 ## Concepts
 
@@ -108,6 +119,7 @@ print(u)
 print(y)
 ```
 ```js -Visualization.js
+console.clear();
 var traces = [
   {
     x: d3.range(0, 100),
@@ -145,7 +157,7 @@ var layout = {
     tracetoggle: false
 };
 ```
-@eval
+@eval(1)
 
 
 ## Control application
@@ -213,7 +225,7 @@ var traces = [
     mode: 'lines',
     line: {shape: 'vh'},
     type: 'scatter',
-    name: 'Activation u',
+    name: 'control variable u',
   },
   {
     x: d3.range(0, 100),
@@ -249,7 +261,7 @@ var layout = {
     tracetoggle: false
 };
 ```
-@eval
+@eval(1)
 
 Based on this setting we can monitor different reactions:
 
@@ -259,3 +271,10 @@ Based on this setting we can monitor different reactions:
 | 18.0  | 0.0   | 0.0   | The system oscillates.                                      |
 | ...   |       |       |                                                           |
 
+## Test
+
+The $D$ part of a PID controller is responsible for a
+
+[( )] fast adaptation in case of changing target values
+[( )] long term adaptation of the controlled system state
+[[?]] Which mathematical relation is represented by $D$
