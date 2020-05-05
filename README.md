@@ -19,14 +19,11 @@ script:   https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js
 link: https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css
 
 @eval
-@Rextester._eval_(@uid, @Python, , , ,```
-    var lines = data.Result.replace(/\n/g, ' ')
-                           .replace(/\s{2,}/g, ' ')
-                           .match(/(-?\d+\.\d*\s*)+/g)
-
+@Rextester._eval_(@uid, @Python3, , , ,```
+    var lines = data.Result.split(/[\r\n]+/g);
     var outcome = [];
     for (var i=0; i<lines.length; i++){
-      outcome[i] = lines[i].split(' ').map(function(item) {
+      outcome[i] = lines[i].split(',').map(function(item) {
           return parseFloat(item);
       });
     }
@@ -35,7 +32,7 @@ link: https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css
     if (@0 == 1){
       setTimeout(function() { console.clear() }, 1);
     }
-    console.log("Aus Maus");
+    console.log("Aus die Maus");
 ```)
 @end
 -->
@@ -98,25 +95,26 @@ $$T^\star = \frac{1}{\frac{T}{\Delta T}+1}$$
 
 
 ```python                          System.py
-import numpy as np
-
 # Parameters of the system
 T = 0.01           # time constant of the system
 deltaT = 0.001     # sample frequency
 K = 1              # Final value
 
 # Input values
-u = np.zeros(50); u[10:20]=1; u[30:-1]=1
+samples=100
+u = [0.]*samples
+u[10:20]=[1.]*10; u[30:60]=[1.]*30
 T_star = 1 / ((T / deltaT) + 1)
 
 # Simulation of the system
-y = np.zeros(len(u))
+y = [0]*len(u)
 for index, entry in enumerate(u):
-    if index>0:
-        y[index] = T_star*(K*u[index]-y[index-1])+y[index-1]
+   if index > 0:
+       y[index] = T_star*(K*u[index-1]-y[index-1])+y[index-1]
 
 print(u)
 print(y)
+
 ```
 ```js -Visualization.js
 console.clear();
@@ -170,7 +168,6 @@ $$ u(t) = \underbrace{K_P \cdot e(t)}_{\text{Propotional part}}
 $$
 
 ```python                          System.py
-import numpy as np
 
 # Parameters of the system
 T = 0.05           # time constant of the system
@@ -180,7 +177,7 @@ K = 3              # Final value
 T_star = 1 / ((T / deltaT) + 1)
 
 # Control parameters
-Kp = 3.0
+Kp = 20.0
 Ki = 0.0
 Kd = 0.0
 
@@ -189,15 +186,15 @@ e_old  = 0   # Regelabweichung e(t-1)
 e_sum  = 0
 
 # Simulation parameters
-samples = 50  # number of steps
-u = np.zeros(samples)
-y = np.zeros(samples)
-error = np.zeros(samples)
+samples = 100  # number of steps
+u = [0] * samples
+y = [0] * samples
+error = [0] * samples
 target = 1.5
 
 # Simulation of the system
 def nextPlantStep (u, t):
-  if t>0:
+  if t > 0:
     y[t] = T_star*(K*u-y[t-1])+y[t-1]
 
 for t in range(1, samples-1):
@@ -212,10 +209,10 @@ for t in range(1, samples-1):
   error[t]= e;
 y[-1] = y[-2]
 
-np.set_printoptions(precision=5, suppress=True)
-print(np.round(u, 4))
-print(np.round(y, 4))
-print(np.ones(samples)*target)
+print(u)
+print(y)
+targets = [target] * samples
+print(targets)
 ```
 ```js -Visualization.js
 var traces = [
@@ -225,7 +222,7 @@ var traces = [
     mode: 'lines',
     line: {shape: 'vh'},
     type: 'scatter',
-    name: 'control variable u',
+    name: 'Control variable u',
   },
   {
     x: d3.range(0, 100),
@@ -245,7 +242,7 @@ var layout = {
     height : 300,
     width :  650,
     yaxis: {
-      range: [-2, 4],
+      range: [-2, 7],
       title: {
         text: 'System value',
       },
